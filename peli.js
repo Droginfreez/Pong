@@ -2,7 +2,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 var paddleHeight = 10;
-var paddleWidth = 75;
+var paddleWidth = 80;
 var paddleX = (canvas.width-paddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
@@ -30,10 +30,10 @@ function keyUpHandler(e) {
 
 const circle = {
     x:200,
-    y:200,
+    y:500,
     size: 15,
-    dx: 2,
-    dy: 1.5,
+    dx: 0,
+    dy: 0.5,
 }
 function drawCircle() {
     ctx.beginPath();
@@ -63,8 +63,10 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
     }     if(circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
     }
-    if (circle.x == paddleX && circle.y == paddleHeight) {
-        circle.dy *= -1;  
+    if (circle.x >= paddleX - 80 && circle.x <= paddleX + 80) {
+        if (circle.y == canvas.height - (paddleHeight + circle.size)) {
+            circle.dy *= -1;  
+        }
     }
 
     requestAnimationFrame(update);
@@ -93,10 +95,3 @@ x += dx;
     y += dy;
 }
 update();
-
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 6aaae196e3ee4ce476b5689d392e9e3e913c4404
