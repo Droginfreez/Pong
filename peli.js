@@ -81,13 +81,24 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
     circle.x +=circle.dx;
     circle.y += circle.dy;
     if(circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
-        circle.dx *= -1;
-    }     if(circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
-        circle.dy *= -1;
+circle.dx *=-1;
+    }
+    //jos osuu pohjaan menettää elämän
+    if(circle.y + circle.size > canvas.height + 20) {
+        circle.x = 200,
+        circle.y = 200,
+        circle.size = 15,
+        circle.dx = 2,
+        circle.dy = 1.5,
+        alert("Menetit elämän");
+
+    }
+    if (circle.y - circle.size < 0) {
+        alert("vihollinen menetti elämän")
     }
     //pallo kimpoaa pelaajasta
     if (circle.x >= paddleX && circle.x <= paddleX + 80) {
-        if (circle.y == canvas.height - (paddleHeight + circle.size)) {
+        if (circle.y >= canvas.height) {
             circle.dy *= -1;  
         }
     }
@@ -120,7 +131,5 @@ else if(leftPressed) {
         paddleX = 0;
     }
 }
-x += dx
-    y += dy
 }
 update();
