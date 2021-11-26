@@ -30,10 +30,10 @@ function keyUpHandler(e) {
 
 const circle = {
     x:200,
-    y:500,
+    y:200,
     size: 15,
-    dx: 0,
-    dy: 0.5,
+    dx: 2,
+    dy: 1.5,
 }
 function drawCircle() {
     ctx.beginPath();
