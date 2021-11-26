@@ -4,6 +4,9 @@ const ctx = canvas.getContext('2d');
 var paddleHeight = 10;
 var paddleWidth = 80;
 var paddleX = (canvas.width-paddleWidth) / 2;
+var enemyPaddleHeight = 10;
+var enemyPaddleWidth = 80;
+var enemyPaddleX = (canvas.width-enemyPaddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
 
@@ -50,11 +53,31 @@ function drawPaddle() {
 }
 
 
+function DrawEnemyPaddle() {
+    ctx.beginPath();
+    ctx.rect(enemyPaddleX, 0 , enemyPaddleWidth, enemyPaddleHeight);
+    ctx.fillStyle = "#000000";
+    ctx.fill();
+    ctx.closePath();
+}
+
+// vihollinen seuraa pallon x koordinaattia
+function enemyMove() {
+    if (enemyPaddleX + 40 > circle.x && enemyPaddleX >= 0) {
+        enemyPaddleX -= 2.3;
+    } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
+        enemyPaddleX += 2.3;
+    }
+}
+
+
 function update() {
 ctx.clearRect(0,0, canvas.width, canvas.height);
 
     drawCircle();
     drawPaddle();
+    DrawEnemyPaddle()
+    enemyMove()
 
     circle.x +=circle.dx;
     circle.y += circle.dy;
@@ -63,8 +86,15 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
     }     if(circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
     }
-    if (circle.x >= paddleX - 80 && circle.x <= paddleX + 80) {
+    //pallo kimpoaa pelaajasta
+    if (circle.x >= paddleX && circle.x <= paddleX + 80) {
         if (circle.y == canvas.height - (paddleHeight + circle.size)) {
+            circle.dy *= -1;  
+        }
+    }
+    //pallo kimpoaa vihollisesta
+    if (circle.x >= enemyPaddleX && circle.x <= enemyPaddleX + 80)  {
+        if (circle.y <= 0 + enemyPaddleHeight + circle.size) {
             circle.dy *= -1;  
         }
     }
@@ -91,7 +121,7 @@ else if(leftPressed) {
         paddleX = 0;
     }
 }
-x += dx;
-    y += dy;
+x += dx
+    y += dy
 }
 update();
