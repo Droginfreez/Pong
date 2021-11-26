@@ -52,7 +52,7 @@ function drawPaddle() {
 }
 
 
-function DrawEnemyPaddle() {
+function drawEnemyPaddle() {
     ctx.beginPath();
     ctx.rect(enemyPaddleX, 0 , enemyPaddleWidth, enemyPaddleHeight);
     ctx.fillStyle = "#000000";
@@ -75,7 +75,7 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
 
     drawCircle();
     drawPaddle();
-    DrawEnemyPaddle()
+    drawEnemyPaddle()
     enemyMove()
 
     circle.x +=circle.dx;
