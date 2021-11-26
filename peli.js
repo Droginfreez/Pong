@@ -2,7 +2,7 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 var paddleHeight = 10;
 var paddleWidth = 75;
-var paddleX = (canvas.width-paddleWidth) / 2;
+var paddleX = 10;
 var rightPressed = false;
 var leftPressed = false;
 
@@ -59,12 +59,16 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
     circle.y += circle.dy;
     if(circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
         circle.dx *= -1;
-    }     if(circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
-        circle.dy *= -1;
-    }
-    if (circle.x == paddleX && circle.y == paddleHeight) {
+    } 
+    if ((circle.y - canvas.height + 20 >= paddleHeight) && circle.x - canvas.width <= paddleX || circle.x - canvas.widht <= paddleX + 75)   {
         circle.dy *= -1;  
+    }  else  if(circle.y + circle.size -20  > canvas.height || circle.y - circle.size < 0) {
+        circle.x =200,
+        circle.y =200
+        circle.dx = 2,
+        circle.dy = 1.5
     }
+    
 
     requestAnimationFrame(update);
    
@@ -88,12 +92,5 @@ else if(leftPressed) {
         paddleX = 0;
     }
 }
-x += dx;
-    y += dy;
 }
 update();
-
-
-
-
-
