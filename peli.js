@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 var paddleHeight = 10;
@@ -94,9 +93,7 @@ x += dx;
 }
 update();
 
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> 6aaae196e3ee4ce476b5689d392e9e3e913c4404
+
