@@ -56,7 +56,7 @@ function drawPaddle() {
 //antaa random spawn pointin pallolle
 function randomSpawn(turn) {
     circle.x = Math.random() * canvas.width;
-    circle.dx = (Math.random() * 5) - 2.5;
+    circle.dx = (Math.random() * 6) - 3;
     if (circle.x < 15) {
         circle.x = 15
     } else if (circle.x > canvas.width - 15) {
@@ -64,10 +64,10 @@ function randomSpawn(turn) {
     }
     if (turn) {
         circle.y = 50;
-        circle.dy = 2;
+        circle.dy = 3;
     } else {
         circle.y = canvas.height - 50;
-        circle.dy = -2;
+        circle.dy = -3;
     }
 }
 
@@ -83,15 +83,36 @@ function drawEnemyPaddle() {
 function enemyMove() {
     if (enemyPaddleX + 40 > circle.x && enemyPaddleX >= 0) {
 
-        enemyPaddleX -= 1.5;
+        enemyPaddleX -= 2.5;
     } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
 
-        enemyPaddleX += 1.5;
+        enemyPaddleX += 2.5;
     }
     
 }
-
 randomSpawn(true)
+
+//pallo kimpoaa pelaajista tietyllä nopeudella
+function bounceSpeed(enemy) {
+    let spare = 0;
+    if (enemy) {
+        circle.dx = Math.random() * 8 - 4;
+        console.log(circle.dx)
+        circle.dy = (6 - ns(circle.dx));
+    } else {
+        circle.dx = (circle.x - (paddleX + paddleWidth / 2)) / 10;
+        console.log(circle.dx)
+        circle.dy = (6 - ns(circle.dx)) * -1;
+    }
+    //muuttaa negatiivisen numeron positiiviseks
+    function ns(i) {
+        if (i < 0) {
+            i = i * -1;
+        } 
+        return i;
+    }
+}
+
 function update() {
 ctx.clearRect(0,0, canvas.width, canvas.height);
     drawCircle();
@@ -107,11 +128,7 @@ circle.dx *=-1;
     }
     //jos osuu pohjaan tietokone saa pisteen
     if(circle.y + circle.size > canvas.height + 20) {
-        circle.x = 200,
-        circle.y = 200,
-        circle.size = 15,
-        circle.dx = 2,
-        circle.dy = 1.5,
+        randomSpawn(false);
         alert("Vihollinen sai pisteen");
         pisteet2 = pisteet2 + 1;
         document.getElementById("pisteet2").innerHTML="Pisteet: " + pisteet2;
@@ -120,22 +137,19 @@ circle.dx *=-1;
     if (circle.y - circle.size < 0) {
         pisteet = pisteet + 1;
         alert("Sait pisteen")
-        circle.x = 200,
-        circle.y = 200,
-        circle.dx = 2,
-        circle.dy = 1.5
+        randomSpawn(true);
         document.getElementById("pisteet").innerHTML="Pisteet: " + pisteet;
     }
     //pallo kimpoaa pelaajasta
     if (circle.x >= paddleX && circle.x <= paddleX + 80) {
         if (circle.y >= canvas.height - (paddleHeight + circle.size)) {
-            circle.dy *= -1;  
+            bounceSpeed(false)
         }
     }
     //pallo kimpoaa vihollisesta
     if (circle.x >= enemyPaddleX && circle.x <= enemyPaddleX + 80)  {
         if (circle.y <= 0 + enemyPaddleHeight + circle.size) {
-            circle.dy *= -1;  
+            bounceSpeed(true)  
         }
     }
     //pisteidenlasku
