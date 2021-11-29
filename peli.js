@@ -82,13 +82,13 @@ function drawEnemyPaddle() {
 // vihollinen seuraa pallon x koordinaattia
 function enemyMove() {
     if (enemyPaddleX + 40 > circle.x && enemyPaddleX >= 0) {
-        enemyPaddleX -= 1.8;
-    } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
-        enemyPaddleX += 1.8;
+
         enemyPaddleX -= 1.5;
     } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
+
         enemyPaddleX += 1.5;
     }
+    
 }
 
 randomSpawn(true)
@@ -105,7 +105,7 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
     if(circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
 circle.dx *=-1;
     }
-    //jos osuu pohjaan menettää elämän
+    //jos osuu pohjaan tietokone saa pisteen
     if(circle.y + circle.size > canvas.height + 20) {
         circle.x = 200,
         circle.y = 200,
@@ -116,7 +116,7 @@ circle.dx *=-1;
         pisteet2 = pisteet2 + 1;
         document.getElementById("pisteet2").innerHTML="Pisteet: " + pisteet2;
     }
-    //(jos) pallo osuu vihollisen puolelle kattoon niin tietokone menettää elämän
+    //(jos) pallo osuu vihollisen puolelle kattoon niin pelaaja saa pisteen
     if (circle.y - circle.size < 0) {
         pisteet = pisteet + 1;
         alert("Sait pisteen")
