@@ -33,17 +33,17 @@ function keyUpHandler(e) {
 }
 
 const circle = {
-    x:200,
-    y:200,
+    x: 15,
+    y: 60,
     size: 15,
-    dx: 2,
-    dy: 1.5,
+    dx: 0,
+    dy: 2,
 }
 function drawCircle() {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
-ctx.fillStyle='black';
-ctx.fill();
+    ctx.fillStyle='black';
+    ctx.fill();
 }
 function drawPaddle() {
     ctx.beginPath();
@@ -51,6 +51,24 @@ function drawPaddle() {
     ctx.fillStyle = "#000000";
     ctx.fill();
     ctx.closePath();
+}
+
+//antaa random spawn pointin pallolle
+function randomSpawn(turn) {
+    circle.x = Math.random() * canvas.width;
+    circle.dx = (Math.random() * 5) - 2.5;
+    if (circle.x < 15) {
+        circle.x = 15
+    } else if (circle.x > canvas.width - 15) {
+        circle.x = canvas.width - 15;
+    }
+    if (turn) {
+        circle.y = 50;
+        circle.dy = 2;
+    } else {
+        circle.y = canvas.height - 50;
+        circle.dy = -2;
+    }
 }
 
 
@@ -67,10 +85,13 @@ function enemyMove() {
         enemyPaddleX -= 1.8;
     } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
         enemyPaddleX += 1.8;
+        enemyPaddleX -= 1.5;
+    } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
+        enemyPaddleX += 1.5;
     }
 }
 
-
+randomSpawn(true)
 function update() {
 ctx.clearRect(0,0, canvas.width, canvas.height);
     drawCircle();
@@ -107,7 +128,7 @@ circle.dx *=-1;
     }
     //pallo kimpoaa pelaajasta
     if (circle.x >= paddleX && circle.x <= paddleX + 80) {
-        if (circle.y >= canvas.height) {
+        if (circle.y >= canvas.height - (paddleHeight + circle.size)) {
             circle.dy *= -1;  
         }
     }
