@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 
-#sivu.body {
+body{
     background-color: #333;
     color: #fff;
     display: flex;
@@ -22,10 +22,10 @@
     font-size: 30px;
 }
 
-.peli:hover {
- background-color: rgb(168, 228, 223);
- }
-
+.menu {
+    background-color: white;
+    color: white;
+}
 .peli {
     display:grid;
     text-align: center;
@@ -57,7 +57,7 @@ a.tayta {
     width: 100%;
     text-decoration: none; 
 }
-.peli1:hover {
+.peli:hover {
     background-color: rgb(168, 228, 223);
 }
 .peli2:hover {
