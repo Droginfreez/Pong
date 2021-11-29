@@ -8,6 +8,8 @@ var enemyPaddleWidth = 80;
 var enemyPaddleX = (canvas.width-enemyPaddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
+var pisteet = 0;
+var pisteet2 = 0;
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -59,24 +61,23 @@ function drawEnemyPaddle() {
     ctx.fill();
     ctx.closePath();
 }
-
 // vihollinen seuraa pallon x koordinaattia
 function enemyMove() {
     if (enemyPaddleX + 40 > circle.x && enemyPaddleX >= 0) {
-        enemyPaddleX -= 2.3;
+        enemyPaddleX -= 1.8;
     } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
-        enemyPaddleX += 2.3;
+        enemyPaddleX += 1.8;
     }
 }
 
 
 function update() {
 ctx.clearRect(0,0, canvas.width, canvas.height);
-
     drawCircle();
     drawPaddle();
-    drawEnemyPaddle()
-    enemyMove()
+    drawEnemyPaddle();
+    enemyMove();
+    
 
     circle.x +=circle.dx;
     circle.y += circle.dy;
@@ -90,11 +91,19 @@ circle.dx *=-1;
         circle.size = 15,
         circle.dx = 2,
         circle.dy = 1.5,
-        alert("Menetit elämän");
-
+        alert("Vihollinen sai pisteen");
+        pisteet2 = pisteet2 + 1;
+        document.getElementById("pisteet2").innerHTML="Pisteet: " + pisteet2;
     }
+    //(jos) pallo osuu vihollisen puolelle kattoon niin tietokone menettää elämän
     if (circle.y - circle.size < 0) {
-        alert("vihollinen menetti elämän")
+        pisteet = pisteet + 1;
+        alert("Sait pisteen")
+        circle.x = 200,
+        circle.y = 200,
+        circle.dx = 2,
+        circle.dy = 1.5
+        document.getElementById("pisteet").innerHTML="Pisteet: " + pisteet;
     }
     //pallo kimpoaa pelaajasta
     if (circle.x >= paddleX && circle.x <= paddleX + 80) {
@@ -108,6 +117,16 @@ circle.dx *=-1;
             circle.dy *= -1;  
         }
     }
+    //pisteidenlasku
+    if (pisteet >= 5) {
+        alert("Voitit pelin!");
+        location.reload();
+    } 
+    if (pisteet2 >= 5) {
+        alert("Hävisit pelin!")
+        location.reload();
+    }
+    
 
     requestAnimationFrame(update);
    
@@ -132,4 +151,5 @@ else if(leftPressed) {
     }
 }
 }
+
 update();
