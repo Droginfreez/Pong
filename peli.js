@@ -31,17 +31,17 @@ function keyUpHandler(e) {
 }
 
 const circle = {
-    x:200,
-    y:200,
+    x: 15,
+    y: 60,
     size: 15,
-    dx: 2,
-    dy: 1.5,
+    dx: 0,
+    dy: 2,
 }
 function drawCircle() {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
-ctx.fillStyle='black';
-ctx.fill();
+    ctx.fillStyle='black';
+    ctx.fill();
 }
 function drawPaddle() {
     ctx.beginPath();
@@ -49,6 +49,24 @@ function drawPaddle() {
     ctx.fillStyle = "#000000";
     ctx.fill();
     ctx.closePath();
+}
+
+//antaa random spawn pointin pallolle
+function randomSpawn(turn) {
+    circle.x = Math.random() * canvas.width;
+    circle.dx = (Math.random() * 5) - 2.5;
+    if (circle.x < 15) {
+        circle.x = 15
+    } else if (circle.x > canvas.width - 15) {
+        circle.x = canvas.width - 15;
+    }
+    if (turn) {
+        circle.y = 50;
+        circle.dy = 2;
+    } else {
+        circle.y = canvas.height - 50;
+        circle.dy = -2;
+    }
 }
 
 
@@ -63,13 +81,13 @@ function drawEnemyPaddle() {
 // vihollinen seuraa pallon x koordinaattia
 function enemyMove() {
     if (enemyPaddleX + 40 > circle.x && enemyPaddleX >= 0) {
-        enemyPaddleX -= 2.3;
+        enemyPaddleX -= 1.5;
     } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
-        enemyPaddleX += 2.3;
+        enemyPaddleX += 1.5;
     }
 }
 
-
+randomSpawn(true)
 function update() {
 ctx.clearRect(0,0, canvas.width, canvas.height);
 
@@ -85,20 +103,16 @@ circle.dx *=-1;
     }
     //jos osuu pohjaan menettää elämän
     if(circle.y + circle.size > canvas.height + 20) {
-        circle.x = 200,
-        circle.y = 200,
-        circle.size = 15,
-        circle.dx = 2,
-        circle.dy = 1.5,
-        alert("Menetit elämän");
-
+        randomSpawn(true);
+        console.log("piste")
     }
     if (circle.y - circle.size < 0) {
-        alert("vihollinen menetti elämän")
+        console.log("vihollinen")
+        randomSpawn(false);
     }
     //pallo kimpoaa pelaajasta
     if (circle.x >= paddleX && circle.x <= paddleX + 80) {
-        if (circle.y >= canvas.height) {
+        if (circle.y >= canvas.height - (paddleHeight + circle.size)) {
             circle.dy *= -1;  
         }
     }
