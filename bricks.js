@@ -1,15 +1,7 @@
-
-
-
-
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 var paddleHeight = 10;
 var paddleWidth = 80;
-var x = canvas.width/2;
-var y = canvas.height-30;
-var dx = 2;
-var dy = -2;
 var paddleX = (canvas.width-paddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
@@ -51,19 +43,6 @@ function keyUpHandler(e) {
         leftPressed = false;
     }
 }
-function collisionDetection() {
-    for (var c = 0; c < brickColumnCount; c++) {
-        for (var r = 0; r < brickRowCount; r++) {
-            var b = bricks[c][r];
-            if (b.status == 1) {
-                if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-                    dy = -dy;
-                    b.status = 0;
-                }
-            }
-        }
-    }
-}
 const circle = {
     x: 400,
     y: 400,
@@ -78,6 +57,20 @@ function drawCircle() {
     ctx.fill();
     ctx.closePath();
 }
+function collisionDetection() {
+    for (var c = 0; c < brickColumnCount; c++) {
+        for (var r = 0; r < brickRowCount; r++) {
+            var b = bricks[c][r];
+            if (b.status == 1) {
+                if (circle.x > b.x && circle.x < b.x + brickWidth && circle.y > b.y && circle.y < b.y + brickHeight) {
+                    circle.dy *= -1;
+                    b.status = 0;
+                }
+            }
+        }
+    }
+}
+
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
