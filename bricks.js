@@ -53,7 +53,7 @@ const circle = {
 function drawCircle() {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
-    ctx.fillStyle='black';
+    ctx.fillStyle='blue';
     ctx.fill();
     ctx.closePath();
 }
@@ -74,7 +74,7 @@ function collisionDetection() {
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "#42aa02";
     ctx.fill();
     ctx.closePath();
 }
@@ -91,7 +91,7 @@ function drawBricks() {
           bricks[c][r].y = brickY;
           ctx.beginPath();
           ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#00000";
+          ctx.fillStyle = "#000000";
           ctx.fill();
           ctx.closePath();
         }

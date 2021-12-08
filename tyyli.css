@@ -15,7 +15,7 @@ body#pong, body#bricks{
 }
 
 #canvas {
-    background: #f0f0f0;
+    background-color: #fff;
     border-radius: 5px;
 }
 .pisteet {
