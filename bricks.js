@@ -3,13 +3,25 @@ const ctx = canvas.getContext('2d');
 var paddleHeight = 10;
 var paddleWidth = 80;
 var paddleX = (canvas.width-paddleWidth) / 2;
-var enemyPaddleHeight = 10;
-var enemyPaddleWidth = 80;
-var enemyPaddleX = (canvas.width-enemyPaddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
+var brickRowCount = 5;
+var brickColumnCount = 4;
+var brickWidth = 100;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
 var pisteet = 0;
-var pisteet2 = 0;
+var elamat = 3;
+
+var bricks = [];
+for(var c=0; c<brickColumnCount; c++) {
+    bricks[c] = [];
+    for(var r=0; r<brickRowCount; r++) {
+      bricks[c][r] = { x: 0, y: 0, status: 1 };
+    }
+  }
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -31,20 +43,34 @@ function keyUpHandler(e) {
         leftPressed = false;
     }
 }
-
 const circle = {
-    x: 15,
-    y: 60,
+    x: 400,
+    y: 400,
     size: 15,
-    dx: 0,
-    dy: 2,
+    dx: 2.5,
+    dy: -2.5,
 }
 function drawCircle() {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
     ctx.fillStyle='blue';
     ctx.fill();
+    ctx.closePath();
 }
+function collisionDetection() {
+    for (var c = 0; c < brickColumnCount; c++) {
+        for (var r = 0; r < brickRowCount; r++) {
+            var b = bricks[c][r];
+            if (b.status == 1) {
+                if (circle.x > b.x && circle.x < b.x + brickWidth && circle.y > b.y && circle.y < b.y + brickHeight) {
+                    circle.dy *= -1;
+                    b.status = 0;
+                }
+            }
+        }
+    }
+}
+
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
@@ -53,45 +79,26 @@ function drawPaddle() {
     ctx.closePath();
 }
 
-//antaa random spawn pointin pallolle
-function randomSpawn(turn) {
-    circle.x = Math.random() * canvas.width;
-    circle.dx = (Math.random() * 6) - 3;
-    if (circle.x < 15) {
-        circle.x = 15
-    } else if (circle.x > canvas.width - 15) {
-        circle.x = canvas.width - 15;
+// piirtää tiilet
+
+function drawBricks() {
+    for(var c=0; c<brickColumnCount; c++) {
+      for(var r=0; r<brickRowCount; r++) {
+        if(bricks[c][r].status == 1) {
+          var brickX = (r*(brickWidth+brickPadding))+brickOffsetLeft;
+          var brickY = (c*(brickHeight+brickPadding))+brickOffsetTop;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          ctx.beginPath();
+          ctx.rect(brickX, brickY, brickWidth, brickHeight);
+          ctx.fillStyle = "#000000";
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
     }
-    if (turn) {
-        circle.y = 50;
-        circle.dy = 3;
-    } else {
-        circle.y = canvas.height - 50;
-        circle.dy = -3;
-    }
-}
-
-
-function drawEnemyPaddle() {
-    ctx.beginPath();
-    ctx.rect(enemyPaddleX, 0 , enemyPaddleWidth, enemyPaddleHeight);
-    ctx.fillStyle = "#7B0000";
-    ctx.fill();
-    ctx.closePath();
-}
-
-// vihollinen seuraa pallon x koordinaattia
-function enemyMove() {
-    if (enemyPaddleX + 40 > circle.x && enemyPaddleX >= 0) {
-
-        enemyPaddleX -= 2.5;
-    } else if (enemyPaddleX + 40< circle.x && enemyPaddleX + enemyPaddleWidth < canvas.width) {
-
-        enemyPaddleX += 2.5;
-    }
-    
-}
-randomSpawn(true)
+  }
+  
 
 //pallo kimpoaa pelaajista tietyllä nopeudella
 function bounceSpeed(enemy) {
@@ -115,11 +122,12 @@ function bounceSpeed(enemy) {
 }
 
 function update() {
-    ctx.clearRect(0,0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    collisionDetection();
+    drawBricks();
     drawCircle();
     drawPaddle();
-    drawEnemyPaddle();
-    enemyMove();
+    
     
 
     circle.x +=circle.dx;
@@ -127,42 +135,22 @@ function update() {
     if(circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
 circle.dx *=-1;
     }
-    //jos osuu pohjaan tietokone saa pisteen
+    if(circle.y - circle.size < 0) {
+        circle.dy *= -1;
+    }
     if(circle.y + circle.size > canvas.height + 20) {
-        randomSpawn(false);
-        alert("Vihollinen sai pisteen");
-        pisteet2 = pisteet2 + 1;
-        document.getElementById("pisteet2").innerHTML="Pisteet: " + pisteet2;
+        alert("Hävisit pelin");
+    document.location.reload();
     }
-    //(jos) pallo osuu vihollisen puolelle kattoon niin pelaaja saa pisteen
-    if (circle.y - circle.size < 0) {
-        pisteet = pisteet + 1;
-        alert("Sait pisteen")
-        randomSpawn(true);
-        document.getElementById("pisteet").innerHTML="Pisteet: " + pisteet;
-    }
+    
+    
+
     //pallo kimpoaa pelaajasta
     if (circle.x >= paddleX && circle.x <= paddleX + 80) {
         if (circle.y >= canvas.height - (paddleHeight + circle.size)) {
             bounceSpeed(false)
         }
     }
-    //pallo kimpoaa vihollisesta
-    if (circle.x >= enemyPaddleX && circle.x <= enemyPaddleX + 80)  {
-        if (circle.y <= 0 + enemyPaddleHeight + circle.size) {
-            bounceSpeed(true)  
-        }
-    }
-    //pisteidenlasku
-    if (pisteet >= 5) {
-        alert("Voitit pelin!");
-        location.reload();
-    } 
-    if (pisteet2 >= 5) {
-        alert("Hävisit pelin!")
-        location.reload();
-    }
-    
 
     requestAnimationFrame(update);
    
