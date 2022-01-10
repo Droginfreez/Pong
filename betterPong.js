@@ -11,6 +11,13 @@ var leftPressed = false;
 var pisteet = 0;
 var pisteet2 = 0;
 
+var colorArray = [
+    'rgba(219, 98, 33 ,0.2)',
+    'rgba(33, 169, 219 ,0.2)',
+    'rgba(153, 105, 219 ,0.2)',
+    'rgba(163, 0, 0 ,0.2)',
+]
+
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
@@ -33,22 +40,23 @@ function keyUpHandler(e) {
 }
 
 const circle = {
-    x: 15,
-    y: 60,
+    x: 0,
+    y: 0,
     size: 15,
+    max: 8,
     dx: 0,
-    dy: 2,
+    dy: 0,
 }
 function drawCircle() {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
-    ctx.fillStyle='black';
+    ctx.fillStyle='white';
     ctx.fill();
 }
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "white";
     ctx.fill();
     ctx.closePath();
 }
@@ -75,7 +83,7 @@ function randomSpawn(turn) {
 function drawEnemyPaddle() {
     ctx.beginPath();
     ctx.rect(enemyPaddleX, 0 , enemyPaddleWidth, enemyPaddleHeight);
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "white";
     ctx.fill();
     ctx.closePath();
 }
@@ -97,7 +105,7 @@ randomSpawn(true)
 function bounceSpeed(enemy) {
     let spare = 0;
     if (enemy) {
-        circle.dx = Math.random() * 8 - 4;
+        circle.dx = Math.random() * circle.max - circle.max / 2;
         console.log(circle.dx)
         circle.dy = (6 - ns(circle.dx));
     } else {
@@ -114,26 +122,83 @@ function bounceSpeed(enemy) {
     }
 }
 
+//tekee erikois palloja
+var circleArray = [];
+var i = 0;
+function powerUP() {
+    while (circleArray.length < 4) {
+        var radius = 15;
+        var x = Math.random() * canvas.width - 15;
+        var y = Math.random() * canvas.height - 15;
+
+        if (x <= 15) {
+            x = 15
+        }
+        if (y <= 30) {
+            y = 30;
+        } 
+
+        circleArray.push(new Circle(x, y, radius, i));
+        i++
+    }
+}
+
+function Circle(x, y, radius,i) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = colorArray[i]
+    this.i = i;
+
+    this.draw = function() {
+        ctx.beginPath();
+        ctx.arc(this.x,this.y, this.radius, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color
+        ctx.fill();
+    }
+
+    this.update = function() {
+        console.log(this.i)
+        this.draw();
+    }
+
+    //tarkistaa osuiko pallo erikois palloihin
+    function getPowerUP(x, y, i) {
+        checkCollision(x, y, i)
+    }
+}
+
 function update() {
-    ctx.clearRect(0,0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+    ctx.fillRect(0,0,canvas.width,10);
+    ctx.fillRect(0,canvas.height-10,canvas.width,canvas.height);
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
     drawCircle();
     drawPaddle();
     drawEnemyPaddle();
     enemyMove();
+    powerUP()
+    for (var i = 0; i < circleArray.length; i++) {
+        circleArray[i].update();
+    }
     
-
     circle.x +=circle.dx;
     circle.y += circle.dy;
     if(circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
-circle.dx *=-1;
+        circle.dx *=-1;
     }
+
     //jos osuu pohjaan tietokone saa pisteen
-    if(circle.y + circle.size > canvas.height + 20) {
+    if(circle.y + circle.size > canvas.height) {
         randomSpawn(false);
         alert("Vihollinen sai pisteen");
         pisteet2 = pisteet2 + 1;
         document.getElementById("pisteet2").innerHTML="Pisteet: " + pisteet2;
     }
+    
     //(jos) pallo osuu vihollisen puolelle kattoon niin pelaaja saa pisteen
     if (circle.y - circle.size < 0) {
         pisteet = pisteet + 1;
@@ -167,25 +232,23 @@ circle.dx *=-1;
     requestAnimationFrame(update);
    
 
+    if(rightPressed) {
+        paddleX += 4;
+    } else if(leftPressed) {
+        paddleX -= 4;
+    } 
 
-if(rightPressed) {
-    paddleX += 4;
-}
-else if(leftPressed) {
-    paddleX -= 4;
-}
-if(rightPressed) {
-    paddleX += 4;
-    if (paddleX + paddleWidth > canvas.width){
-        paddleX = canvas.width - paddleWidth;
+    if(rightPressed) {
+        paddleX += 4;
+        if (paddleX + paddleWidth > canvas.width){
+            paddleX = canvas.width - paddleWidth;
+        }
+    } else if(leftPressed) {
+        paddleX -= 4;
+        if (paddleX < 0){
+            paddleX = 0;
+        }
     }
-}
-else if(leftPressed) {
-    paddleX -= 4;
-    if (paddleX < 0){
-        paddleX = 0;
-    }
-}
 }
 
 update();
