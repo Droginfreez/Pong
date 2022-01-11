@@ -67,4 +67,14 @@ body#menu {
     background-color: white;
 }
   
+.better {
+    background-color: black;
+}
+#powerupit {
+    display: flex;
+}
+li {
+    list-style-type: none;
+    padding: 20px;
+}
         

@@ -79,6 +79,7 @@ function drawEnemyPaddle() {
     ctx.fill();
     ctx.closePath();
 }
+
 // vihollinen seuraa pallon x koordinaattia
 function enemyMove() {
     if (enemyPaddleX + 40 > circle.x && enemyPaddleX >= 0) {
@@ -114,7 +115,7 @@ function bounceSpeed(enemy) {
 }
 
 function update() {
-ctx.clearRect(0,0, canvas.width, canvas.height);
+    ctx.clearRect(0,0, canvas.width, canvas.height);
     drawCircle();
     drawPaddle();
     drawEnemyPaddle();
