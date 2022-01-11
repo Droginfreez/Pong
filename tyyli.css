@@ -70,4 +70,11 @@ body#menu {
 .better {
     background-color: black;
 }
+#powerupit {
+    display: flex;
+}
+li {
+    list-style-type: none;
+    padding: 20px;
+}
         
