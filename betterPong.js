@@ -130,8 +130,6 @@ function bounceSpeed(enemy) {
         return i;
     }
 }
-//var x = Math.random() * (canvas.width - 120) + 60;
-//var y = Math.random() * (canvas.height - 120) + 60;
 
 //tekee powerUpit
 var circleArray = [];
