@@ -19,7 +19,7 @@ var colorArray = [
     'rgba(219, 98, 33 ,0.2)',
     //blue
     'rgba(33, 169, 219 ,0.2)',
-    // violet
+    //violet
     'rgba(153, 105, 219 ,0.2)',
     //green
     'rgba(2, 229, 1 ,0.2)',
@@ -130,17 +130,33 @@ function bounceSpeed(enemy) {
         return i;
     }
 }
+//var x = Math.random() * (canvas.width - 120) + 60;
+//var y = Math.random() * (canvas.height - 120) + 60;
 
 //tekee powerUpit
 var circleArray = [];
 var i = 0;
+setInterval(powerUP, 5000);
 function powerUP() {
-    while (circleArray.length < 4) {
-        var radius = 15;
-        var x = Math.random() * (canvas.width - 120) + 60;
+    var x = Math.random() * (canvas.width - 120) + 60;
+
+    if (i == 0) {
+        var y = Math.random() * (canvas.height - 360) + 180;
+        ball(x, y)
+    } else if (i == 3) {
+        var y = canvas.height / 2;
+        ball(x, y)
+    } else {
         var y = Math.random() * (canvas.height - 120) + 60;
-        circleArray.push(new Circle(x, y, radius, i));
-        i++;
+        ball(x, y)
+    }
+
+    function ball(x, y) {
+        if (circleArray.length < 4) {
+            var radius = 15;
+            circleArray.push(new Circle(x, y, radius, i));
+            i++;
+        }
     }
 }
 
@@ -173,33 +189,37 @@ function checkCollision(x, y, ii) {
     let distanceY = circle.y - y;
     if (distanceX * distanceX + distanceY * distanceY <= 30 * 30) {
         var x = Math.random() * (canvas.width - 120) + 60;
-        var y = Math.random() * (canvas.height - 120) + 60;
-        circleArray[ii].x = x;
-        circleArray[ii].y = y;
-
+        var y = 0;
         if (ii == 0) {
             console.log(ii + " orange " + i);
             circle.dx += circle.dx * 0.7;
             circle.dy += circle.dy * 0.7;
             color = "rgb(254, 82, 0)"
+            y = Math.random() * (canvas.height - 360) + 180;
         } else if (ii == 1) {
             console.log(ii + " blue " + i);
             pColor = 'rgb(33, 169, 219)';
             freeze = true;
+            y = Math.random() * (canvas.width - 120) + 60;
             setTimeout(unfreeze, 600)
         } else if (ii == 2) {
             console.log(ii + " violet " + i);
             circle.dx = circle.dx * -1;
+            y = Math.random() * (canvas.width - 120) + 60;
         } else {
             console.log(ii + " green " + i);
             circle.y = canvas.height / 2;
             circle.x = Math.random() * (canvas.width - 120) + 60
+            y = canvas.height / 2;
+        }
+        circleArray[ii].x = x;
+        circleArray[ii].y = y;
+
+        function unfreeze() {
+            freeze = false;
+            pColor = "white"
         }
     } 
-}
-function unfreeze() {
-    freeze = false;
-    pColor = "white"
 }
 
 function update() {
@@ -213,8 +233,7 @@ function update() {
     drawPaddle();
     drawEnemyPaddle();
     enemyMove();
-    powerUP()
-
+    
     for (var i = 0; i < circleArray.length; i++) {
         circleArray[i].update();
         circleArray[i].getPowerUP(i);
@@ -260,16 +279,6 @@ function update() {
             color = "rgb(254, 255, 255)";  
         }
     }
-    //pisteidenlasku
-    if (pisteet >= 5) {
-        alert("Voitit pelin!");
-        location.reload();
-    } 
-    if (pisteet2 >= 5) {
-        alert("Hävisit pelin!")
-        location.reload();
-    }
-    
 
     requestAnimationFrame(update);
    
@@ -295,4 +304,3 @@ function update() {
 }
 
 update();
-// call powerup based on time
